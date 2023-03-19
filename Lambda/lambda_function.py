@@ -1,3 +1,8 @@
+### Required Libraries ###
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+# from botocore.vendored import requests
+
 ### Functionality Helper Functions ###
 def parse_int(n):
     """
@@ -186,7 +191,7 @@ def recommend_portfolio(intent_request):
 
     
     # investment recommendation based off of selected risk level
-    if risk_level=="none":
+    if risk_level == "none":
         return close(
             intent_request["sessionAttributes"],
              "Fulfilled",
@@ -197,7 +202,7 @@ def recommend_portfolio(intent_request):
             },
         )
     
-    if risk_level=="low":
+    if risk_level == "low":
         return close(
             intent_request["sessionAttributes"],
              "Fulfilled",
@@ -207,7 +212,7 @@ def recommend_portfolio(intent_request):
             
             },
         )
-    if risk_level=="medium":
+    if risk_level == "medium":
         return close(
             intent_request["sessionAttributes"],
              "Fulfilled",
@@ -217,7 +222,7 @@ def recommend_portfolio(intent_request):
             
             },
         )
-    if risk_level=="high":
+    if risk_level == "high":
         return close(
             intent_request["sessionAttributes"],
              "Fulfilled",
