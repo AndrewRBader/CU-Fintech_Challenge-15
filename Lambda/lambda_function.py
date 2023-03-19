@@ -112,17 +112,39 @@ In this section, you will create an Amazon Lambda function that will validate th
 """
 
 ### added validation
-def validate_age(age):
-    if age < 0 or age > 65:
-        return build_validation_result(False, "age", "Input age should be between 0 and 65")
-    else:
-        return build_validation_result(True, None, None)
+def validate_data(age, investment_amount):
+    """
+    Validates the data provided by the user.
+    """
 
-def validate_investment(investment_amount):
-    if investment_amount < 5000:
-        return build_validation_result(False, "InvestmentAmount", "The Investment amount must be greater than $5000")
-    else:
-        return build_validation_result(True, None, None)
+    # Validate that the user age is between 0 and 65
+    if age is not None:
+        # converting age to int
+        age = parse_int(age)
+        if age < 0 or age > 65:
+            return build_validation_result(
+                False,
+                "age",
+                "You should be between 0 and 65 years old",
+            )
+
+    # Validate the investment amount, it should be > 0
+    if investment_amount is not None:
+        investment_amount = parse_int(
+            investment_amount
+        )  # Since investment amount parameter is string, need to recast as a int
+        if investment_amount <= 5000:
+            return build_validation_result(
+                False,
+                "investmentAmount",
+                "The amount to convert should be greater than zero, "
+                "the investment amount needs to be at least $5000",
+            )
+
+    # A True results is returned if age or investment amount are valid
+    return build_validation_result(True, None, None)
+    
+
 
 ### Intents Handlers ###
 def recommend_portfolio(intent_request):
@@ -137,6 +159,78 @@ def recommend_portfolio(intent_request):
     source = intent_request["invocationSource"]
 
     # YOUR CODE GOES HERE!
+    if source == "DialogCodeHook":
+        # This code performs basic validation on the supplied input slots.
+
+        # Gets all the slots
+        slots = get_slots(intent_request)
+
+        # Validates user's input using the validate_data function
+        validation_result = validate_data(age, investment_amount)
+
+        # If the data provided by the user is not valid,
+        # the elicitSlot dialog action is used to re-prompt for the first violation detected.
+        if not validation_result["isValid"]:
+            slots[validation_result["violatedSlot"]] = None  # Cleans invalid slot
+
+            # Returns an elicitSlot dialog to request new data for the invalid slot
+            return elicit_slot(
+                intent_request["sessionAttributes"],
+                intent_request["currentIntent"]["name"],
+                slots,
+                validation_result["violatedSlot"],
+                validation_result["message"],
+            )
+
+        # Fetch current session attributes
+        output_session_attributes = intent_request["sessionAttributes"]
+
+        # Once all slots are valid, a delegate dialog is returned to Lex to choose the next course of action.
+        return delegate(output_session_attributes, get_slots(intent_request))
+
+    
+    # investment recommendation based off of selected risk level
+    
+    if risk_level == 'none':
+        return close(
+            intent_request['sessionAttributes']
+            "Fulfilled",
+            {
+                "contentType": "PlainText",
+                "conent": """Invest 100% bonds (AGG), 0% equities (SPY)"""
+            }
+        )
+    
+    if risk_level == 'low':
+        return close(
+            intent_request['sessionAttributes']
+            "Fulfilled",
+            {
+                "contentType": "PlainText",
+                "conent": """Invest 60% bonds (AGG), 40% equities (SPY)"""
+            }
+        )
+    
+    if risk_level == 'medium':
+        return close(
+            intent_request['sessionAttributes']
+            "Fulfilled",
+            {
+                "contentType": "PlainText",
+                "conent": """Invest 40% bonds (AGG), 60% equities (SPY)”"""
+            }
+        )
+    
+    if risk_level == 'high':
+        return close(
+            intent_request['sessionAttributes']
+            "Fulfilled",
+            {
+                "contentType": "PlainText",
+                "conent": """Invest 20% bonds (AGG), 80% equities (SPY)”"""
+            }
+        )
+
 
 
 ### Intents Dispatcher ###
