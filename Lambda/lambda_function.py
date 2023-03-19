@@ -1,6 +1,7 @@
 ### Required Libraries ###
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from botocore.vendored import requests
 
 ### Functionality Helper Functions ###
 def parse_int(n):
@@ -132,7 +133,7 @@ def validate_data(age, investment_amount):
     if investment_amount is not None:
         investment_amount = parse_int(
             investment_amount
-        )  # Since investment amount parameter is string, need to recast as a int
+        )  # Since investment amount parameter is string, need to recast as an int
         if investment_amount <= 5000:
             return build_validation_result(
                 False,
@@ -191,46 +192,45 @@ def recommend_portfolio(intent_request):
     
     # investment recommendation based off of selected risk level
     
-    if risk_level == 'none':
+    if risk_level == 'None':
         return close(
-            intent_request['sessionAttributes']
+            intent_request['sessionAttributes'],
             "Fulfilled",
             {
                 "contentType": "PlainText",
-                "conent": """Invest 100% bonds (AGG), 0% equities (SPY)"""
+                "content": """Invest 100% bonds (AGG), 0% equities (SPY)"""
             }
         )
     
-    if risk_level == 'low':
+    if risk_level == 'Low':
         return close(
-            intent_request['sessionAttributes']
+            intent_request['sessionAttributes'],
             "Fulfilled",
             {
                 "contentType": "PlainText",
-                "conent": """Invest 60% bonds (AGG), 40% equities (SPY)"""
+                "content": """Invest 60% bonds (AGG), 40% equities (SPY)"""
             }
         )
     
-    if risk_level == 'medium':
+    if risk_level == 'Medium':
         return close(
-            intent_request['sessionAttributes']
+            intent_request['sessionAttributes'],
             "Fulfilled",
             {
                 "contentType": "PlainText",
-                "conent": """Invest 40% bonds (AGG), 60% equities (SPY)”"""
+                "content": """Invest 40% bonds (AGG), 60% equities (SPY)”"""
             }
         )
     
-    if risk_level == 'high':
+    if risk_level == 'High':
         return close(
-            intent_request['sessionAttributes']
+            intent_request['sessionAttributes'],
             "Fulfilled",
             {
                 "contentType": "PlainText",
-                "conent": """Invest 20% bonds (AGG), 80% equities (SPY)”"""
+                "content": """Invest 20% bonds (AGG), 80% equities (SPY)”"""
             }
         )
-
 
 
 ### Intents Dispatcher ###
@@ -256,3 +256,4 @@ def lambda_handler(event, context):
     """
 
     return dispatch(event)
+
