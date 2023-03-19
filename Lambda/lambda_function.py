@@ -1,8 +1,3 @@
-### Required Libraries ###
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from botocore.vendored import requests
-
 ### Functionality Helper Functions ###
 def parse_int(n):
     """
@@ -191,45 +186,46 @@ def recommend_portfolio(intent_request):
 
     
     # investment recommendation based off of selected risk level
-    
-    if risk_level == 'None':
+    if risk_level=="none":
         return close(
-            intent_request['sessionAttributes'],
-            "Fulfilled",
+            intent_request["sessionAttributes"],
+             "Fulfilled",
             {
                 "contentType": "PlainText",
-                "content": """Invest 100% bonds (AGG), 0% equities (SPY)"""
-            }
+                "content": """Invest in 100% bonds (AGG), 0% equities (SPY)""",
+            
+            },
         )
     
-    if risk_level == 'Low':
+    if risk_level=="low":
         return close(
-            intent_request['sessionAttributes'],
-            "Fulfilled",
+            intent_request["sessionAttributes"],
+             "Fulfilled",
             {
                 "contentType": "PlainText",
-                "content": """Invest 60% bonds (AGG), 40% equities (SPY)"""
-            }
+                "content": """Invest in 60% bonds (AGG), 40% equities (SPY);""",
+            
+            },
         )
-    
-    if risk_level == 'Medium':
+    if risk_level=="medium":
         return close(
-            intent_request['sessionAttributes'],
-            "Fulfilled",
+            intent_request["sessionAttributes"],
+             "Fulfilled",
             {
                 "contentType": "PlainText",
-                "content": """Invest 40% bonds (AGG), 60% equities (SPY)”"""
-            }
+                "content": """Invest in 40% bonds (AGG), 60% equities (SPY);""",
+            
+            },
         )
-    
-    if risk_level == 'High':
+    if risk_level=="high":
         return close(
-            intent_request['sessionAttributes'],
-            "Fulfilled",
+            intent_request["sessionAttributes"],
+             "Fulfilled",
             {
                 "contentType": "PlainText",
-                "content": """Invest 20% bonds (AGG), 80% equities (SPY)”"""
-            }
+                "content": """Invest in 20% bonds (AGG), 80% equities (SPY);""",
+            
+            },
         )
 
 
