@@ -111,6 +111,18 @@ In this section, you will create an Amazon Lambda function that will validate th
 
 """
 
+### added validation
+def validate_age(age):
+    if age < 0 or age > 65:
+        return build_validation_result(False, "age", "Input age should be between 0 and 65")
+    else:
+        return build_validation_result(True, None, None)
+
+def validate_investment(investment_amount):
+    if investment_amount < 5000:
+        return build_validation_result(False, "InvestmentAmount", "The Investment amount must be greater than $5000")
+    else:
+        return build_validation_result(True, None, None)
 
 ### Intents Handlers ###
 def recommend_portfolio(intent_request):
